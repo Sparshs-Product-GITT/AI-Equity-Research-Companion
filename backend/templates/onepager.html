@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.ticker }} · {{ page.name }} — one-pager</title>
+<style>
+  :root{--navy:#12203a;--ink:#222833;--ink2:#3a4150;--muted:#6b7380;--faint:#9aa3b0;--line:#e2e5ea;--bg:#f4f5f8;--card:#fff;--accent:#2f6fb0;--accent-soft:#eaf1fa;--good:#2f6b12;--good-bg:#eaf3de;--bad:#a32d2d;--bad-bg:#fbeeee;--warn:#854f0b;--warn-bg:#faeeda;--purple:#3c3489;--purple-bg:#eeedfe;}
+  *{box-sizing:border-box;min-width:0}
+  body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.45 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .page{max-width:1120px;margin:0 auto;padding:18px 18px 28px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;overflow:hidden}
+  .card h2{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--navy);letter-spacing:.01em}
+  .card h2 .src{font-weight:400;font-size:10.5px;color:var(--faint);margin-left:6px}
+  .card h2 .src a{color:var(--faint);text-decoration:none;border-bottom:1px dotted var(--faint)}
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .col{min-width:0}
+  @media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+  .hdr{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+  .hdr .nm{font-size:20px;font-weight:600;color:var(--navy)}
+  .hdr .nm span{font-size:12px;font-weight:400;color:var(--muted);margin-left:8px}
+  .hdr .one{color:var(--ink2);margin-top:4px;max-width:640px}
+  .tag{display:inline-block;background:var(--accent-soft);color:#2c4a6b;font-size:10.5px;padding:3px 9px;border-radius:12px;margin-top:8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .px{text-align:right;min-width:230px;flex:0 0 auto}
+  .px .p{font-size:22px;font-weight:600}
+  .px .s{font-size:11px;color:var(--muted)}
+  .kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:12px}
+  @media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .kpi .l{font-size:10.5px;color:var(--muted)}
+  .kpi .v{font-size:17px;font-weight:600;color:var(--navy);margin-top:2px}
+  p{margin:0 0 8px;color:var(--ink2);overflow-wrap:anywhere}
+  ul{margin:0;padding-left:16px;color:var(--ink2)}
+  li{margin:0 0 4px;overflow-wrap:anywhere}
+  .tbl{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:11.5px}
+  th{text-align:right;font-weight:500;color:var(--muted);border-bottom:1px solid var(--line);padding:4px 5px;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  td{text-align:right;padding:4px 5px;border-bottom:1px solid #f0f2f5;white-space:nowrap}
+  table.wrap td{white-space:normal;overflow-wrap:anywhere}
+  table.wrap td:first-child{max-width:0;width:60%}
+  tr.hl td{background:var(--accent-soft);font-weight:600}
+  tr.med td{color:var(--muted);font-style:italic}
+  .sub{font-size:10.5px;color:var(--faint);margin-top:6px;overflow-wrap:anywhere}
+  .chart{display:flex;align-items:flex-end;gap:14px;height:78px;margin:6px 0 12px;padding-bottom:20px;position:relative}
+  .bar{flex:0 0 46px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+  .bar i{display:block;width:100%;background:var(--accent);border-radius:4px 4px 0 0;opacity:.85}
+  .bar b{font-size:10px;color:var(--ink2);font-weight:500;margin-bottom:2px}
+  .bar em{position:absolute;bottom:-18px;font-size:10px;color:var(--muted);font-style:normal;white-space:nowrap}
+  .bar small{font-size:9.5px;color:var(--good)}
+  .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .box{border-radius:8px;padding:9px 11px}
+  .box.bull{background:var(--good-bg)} .box.bear{background:var(--bad-bg)}
+  .box h3{margin:0 0 4px;font-size:11px;font-weight:600}
+  .bull h3{color:var(--good)} .bear h3{color:var(--bad)}
+  .debate{font-style:italic;color:var(--ink2);border-left:3px solid var(--accent);padding:4px 10px;margin:0 0 10px;background:#fafbfd;overflow-wrap:anywhere}
+  .badge{display:inline-block;font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:10px}
+  .badge.good{background:var(--good-bg);color:var(--good)} .badge.bad{background:var(--bad-bg);color:var(--bad)}
+  .badge.neutral{background:var(--accent-soft);color:#2c4a6b} .badge.muted{background:#eef0f3;color:var(--muted)}
+  .cat{display:inline-block;font-size:9.5px;font-weight:600;padding:1px 6px;border-radius:6px;margin-right:6px;vertical-align:1px}
+  .cat.Earnings{background:var(--accent-soft);color:#2c4a6b} .cat.Product{background:var(--warn-bg);color:var(--warn)}
+  .cat.Leadership{background:var(--purple-bg);color:var(--purple)} .cat.MA{background:#e1f5ee;color:#0f6e56}
+  .cat.Regulatory{background:var(--bad-bg);color:var(--bad)} .cat.Other{background:#eef0f3;color:var(--muted)}
+  .news li{margin-bottom:6px} .news .d{color:var(--faint);font-size:10.5px;margin-left:4px}
+  .news a{color:inherit;text-decoration:none} .news a:hover{text-decoration:underline}
+  .risk{margin-bottom:6px;overflow-wrap:anywhere} .risk b{color:var(--navy);font-weight:600}
+  .h3{margin:0 0 4px;font-size:11px;color:var(--muted);font-weight:600}
+  .na{color:var(--faint);font-style:italic}
+  .foot{text-align:center;color:var(--faint);font-size:10.5px;font-style:italic;padding-top:6px}
+  .warnbar{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:12px}
+  .srcs{font-size:10.5px;color:var(--faint);margin-top:8px;overflow-wrap:anywhere}
+  .srcs a{color:var(--faint);text-decoration:none;border-bottom:1px dotted var(--faint);margin-right:8px}
+  @media print{body{background:#fff}.card{break-inside:avoid}.page{padding:0}}
+</style>
+</head>
+<body>
+<div class="page">
+
+{% if page.partial %}
+<div class="warnbar">Some sections could not be completed and are marked as unavailable. Verify before relying on this page.</div>
+{% endif %}
+
+<section id="hdr" class="card hdr">
+  <div style="min-width:0">
+    <div class="nm">{{ page.name }}<span>{{ page.exchange }}: {{ page.ticker }}</span></div>
+    <div class="one">{{ page.one_liner|truncate(170, true, '…') }}</div>
+    <span class="tag" title="{{ page.sub_industry }}">{{ page.sub_industry|truncate(55, true, '…') }}</span>
+    {% if page.focus_note %}<div class="sub">Analyst focus: {{ page.focus_note|truncate(160, true, '…') }}</div>{% endif %}
+  </div>
+  <div class="px">
+    <div class="p">${{ '%.2f'|format(page.price) }}</div>
+    <div class="s">as of {{ page.as_of }} · market cap {{ page.market_cap|usd }}</div>
+    <div class="s">52-week range ${{ page.wk52_low }} – ${{ page.wk52_high }}</div>
+    <div class="s">{% if page.shares %}{{ '%.0f'|format(page.shares/1e6) }}M shares · {% endif %}fiscal year ends {{ page.fye[:2] }}/{{ page.fye[2:] }}</div>
+  </div>
+</section>
+
+<div class="kpis">
+  {% for k in page.kpis %}<div class="kpi"><div class="l">{{ k.label }}</div><div class="v">{{ k.value }}</div></div>{% endfor %}
+</div>
+
+<div class="grid">
+<div class="col">
+
+  <section id="overview" class="card">
+    <h2>Business overview <span class="src">· source: <a href="{{ page.tenk_url }}">10-K Item 1</a></span></h2>
+    {% if page.overview %}
+      <p>{{ page.overview.description|truncate(400, true, '…') }}</p>
+      <p><b>Business model.</b> {{ page.overview.business_model|truncate(240, true, '…') }}</p>
+      <p><b>Customers.</b> {{ page.overview.customer_base|truncate(220, true, '…') }}</p>
+      {% if page.overview.segments %}
+      <table class="wrap"><tr><th>Segment</th><th>% of revenue</th></tr>
+      {% for s in page.overview.segments[:6] %}<tr><td title="{{ s.note or '' }}">{{ s.name|truncate(48, true, '…') }}</td><td>{{ s.pct_of_revenue|pct if s.pct_of_revenue is not none else 'n/a' }}{% if s.note and s.note|length <= 40 %} <span class="na">{{ s.note }}</span>{% endif %}</td></tr>{% endfor %}
+      </table>
+      {% endif %}
+      {% if page.overview.geographic_mix %}<div class="sub">Geography: {% for g in page.overview.geographic_mix[:4] %}{{ g.region }} {{ g.pct_of_revenue|pct if g.pct_of_revenue is not none else '' }}{% if not loop.last %} · {% endif %}{% endfor %}</div>{% endif %}
+      {% if page.overview.key_products %}<div class="sub">Key products: {{ page.overview.key_products[:6]|join(', ')|truncate(200, true, '…') }}</div>{% endif %}
+    {% else %}<p class="na">Business overview unavailable for this run.</p>{% endif %}
+    {% if page.overview_sources %}<div class="srcs">Sources: {% for s in page.overview_sources %}<a href="{{ s.url }}">{{ s.title|truncate(60, true, '…') }}</a>{% endfor %}</div>{% endif %}
+  </section>
+
+  <section id="thesis" class="card">
+    <h2>Investment thesis <span class="src">· synthesized from this page; no rating or target</span></h2>
+    {% if page.thesis %}
+      <div class="debate">Key debate: {{ page.thesis.key_debate|truncate(220, true, '…') }}</div>
+      <div class="two">
+        <div class="box bull"><h3>Bull case</h3><ul>{% for b in page.thesis.bull_case[:4] %}<li>{{ b|truncate(170, true, '…') }}</li>{% endfor %}</ul></div>
+        <div class="box bear"><h3>Bear case</h3><ul>{% for b in page.thesis.bear_case[:4] %}<li>{{ b|truncate(170, true, '…') }}</li>{% endfor %}</ul></div>
+      </div>
+    {% else %}<p class="na">Thesis unavailable for this run.</p>{% endif %}
+  </section>
+
+  <section id="catalysts" class="card">
+    <h2>Catalysts &amp; risks <span class="src">· source: <a href="{{ page.tenk_url }}">10-K Item 1A</a> + company IR</span></h2>
+    {% if page.catalysts or page.risks %}
+      <div class="two">
+        <div>
+          <div class="h3">Catalysts{% if page.next_earnings %} · next earnings {{ page.next_earnings }}{% endif %}</div>
+          <ul>{% for c in page.catalysts[:4] %}<li><b>{{ c.event|truncate(64, true, '…') }}</b>{% if c.expected_date %} <span class="na">({{ c.expected_date|truncate(20, true, '') }})</span>{% endif %} — {{ c.why_it_matters|truncate(130, true, '…') }}</li>{% endfor %}</ul>
+        </div>
+        <div>
+          <div class="h3">Key risks</div>
+          {% for r in page.risks[:4] %}<div class="risk"><b>{{ r.title|truncate(48, true, '…') }}.</b> {{ r.summary|truncate(180, true, '…') }}</div>{% endfor %}
+        </div>
+      </div>
+    {% else %}<p class="na">Catalysts &amp; risks unavailable for this run.</p>{% endif %}
+    {% if page.cr_sources %}<div class="srcs">Sources: {% for s in page.cr_sources %}<a href="{{ s.url }}">{{ s.title|truncate(60, true, '…') }}</a>{% endfor %}</div>{% endif %}
+  </section>
+
+</div>
+<div class="col">
+
+  <section id="financials" class="card">
+    <h2>Financial performance <span class="src">· SEC EDGAR XBRL (GAAP) + company disclosures</span></h2>
+    {% if page.chart.bars %}
+    <div class="chart">
+      {% for b in page.chart.bars %}
+      <div class="bar"><b>{{ b.value }}</b>{% if b.growth %}<small>{{ b.growth }}</small>{% endif %}<i style="height:{{ b.height }}%"></i><em>{{ b.label }}</em></div>
+      {% endfor %}
+      <div class="sub" style="align-self:flex-start;margin-left:8px">Revenue and YoY growth</div>
+    </div>
+    {% endif %}
+    <div class="tbl"><table>
+      <tr><th>Metric</th>{% for p in page.periods %}<th>{{ p.label }}</th>{% endfor %}</tr>
+      <tr><td>Revenue</td>{% for p in page.periods %}<td>{{ p.revenue|usd }}</td>{% endfor %}</tr>
+      <tr><td>Revenue growth</td>{% for p in page.periods %}<td>{{ p.revenue_growth_pct|pct }}</td>{% endfor %}</tr>
+      <tr><td>Gross margin</td>{% for p in page.periods %}<td>{{ p.gross_margin_pct|pct }}</td>{% endfor %}</tr>
+      <tr><td>Operating margin</td>{% for p in page.periods %}<td>{{ p.operating_margin_pct|pct }}</td>{% endfor %}</tr>
+      <tr><td>Net margin</td>{% for p in page.periods %}<td>{{ p.net_margin_pct|pct }}</td>{% endfor %}</tr>
+      <tr><td>FCF margin</td>{% for p in page.periods %}<td>{{ p.fcf_margin_pct|pct }}</td>{% endfor %}</tr>
+      <tr><td>Rule of 40</td>{% for p in page.periods %}<td>{{ p.rule_of_40 if p.rule_of_40 is not none else 'n/a' }}</td>{% endfor %}</tr>
+      <tr><td>R&amp;D % revenue</td>{% for p in page.periods %}<td>{{ p.rnd_pct_revenue|pct }}</td>{% endfor %}</tr>
+      <tr><td>S&amp;M % revenue</td>{% for p in page.periods %}<td>{{ p.snm_pct_revenue|pct }}</td>{% endfor %}</tr>
+      <tr><td>Diluted EPS</td>{% for p in page.periods %}<td>{{ p.eps_diluted if p.eps_diluted is not none else 'n/a' }}</td>{% endfor %}</tr>
+    </table></div>
+    <div class="sub">Balance sheet ({{ page.balance.as_of }}): cash &amp; short-term investments {{ page.balance.cash_and_investments|usd }} · total debt {{ page.balance.total_debt|usd }} · net cash {{ page.balance.net_cash|usd }}</div>
+    {% if page.saas_metrics %}
+      <table class="wrap" style="margin-top:8px"><tr><th>Disclosed operating metric</th><th>Value</th><th>Period</th></tr>
+      {% for m in page.saas_metrics[:5] %}<tr><td>{{ m.name|truncate(44, true, '…') }}</td><td>{{ m.value|truncate(28, true, '…') }}</td><td>{{ m.period|truncate(28, true, '…') }}</td></tr>{% endfor %}</table>
+    {% elif page.unavailable.financials_enrichment %}<div class="sub na">Disclosed operating metrics unavailable for this run.</div>
+    {% else %}<div class="sub na">No company-disclosed SaaS operating metrics found.</div>{% endif %}
+    {% for n in page.reporting_notes[:3] %}<div class="sub">Note: {{ n|truncate(160, true, '…') }}</div>{% endfor %}
+    {% for n in page.fin_notes %}<div class="sub">Note: {{ n|truncate(200, true, '…') }}</div>{% endfor %}
+    {% if page.fin_sources %}<div class="srcs">Sources: {% for s in page.fin_sources %}<a href="{{ s.url }}">{{ s.title|truncate(60, true, '…') }}</a>{% endfor %}</div>{% endif %}
+  </section>
+
+  <section id="valuation" class="card">
+    <h2>Valuation &amp; peers <span class="src">· trailing multiples, prices as of {{ page.as_of }}</span></h2>
+    {% set pm = page.peer_metrics %}
+    {% set t = pm.target if pm.target else none %}
+    <div class="tbl"><table>
+      <tr><th>Company</th><th>Mkt cap</th><th>EV/Rev</th><th>EV/EBITDA</th><th>P/FCF</th><th>P/E</th><th>Rev growth</th><th>FCF margin</th></tr>
+      <tr class="hl"><td>{{ page.ticker }}</td><td>{{ page.market_cap|usd }}</td><td>{{ page.valuation.ev_to_revenue|x }}</td><td>{{ page.valuation.ev_to_ebitda|x }}</td><td>{{ page.valuation.price_to_fcf|x }}</td><td>{{ page.valuation.price_to_earnings|x }}</td><td>{{ (t.revenue_growth_pct if t else none)|pct }}</td><td>{{ (t.fcf_margin_pct if t else none)|pct }}</td></tr>
+      {% for p in pm.peers %}
+      <tr><td title="{{ p.rationale }}">{{ p.ticker }} <span class="na">{{ p.name|truncate(20, true, '…') }}</span></td><td>{{ p.market_cap|usd }}</td><td>{{ p.ev_to_revenue|x }}</td><td>{{ p.ev_to_ebitda|x }}</td><td>{{ p.price_to_fcf|x }}</td><td>{{ p.price_to_earnings|x }}</td><td>{{ p.revenue_growth_pct|pct }}</td><td>{{ p.fcf_margin_pct|pct }}</td></tr>
+      {% endfor %}
+      {% if pm.peer_median %}
+      <tr class="med"><td>Peer median</td><td></td><td>{{ pm.peer_median.ev_to_revenue|x }}</td><td>{{ pm.peer_median.ev_to_ebitda|x }}</td><td>{{ pm.peer_median.price_to_fcf|x }}</td><td>{{ pm.peer_median.price_to_earnings|x }}</td><td>{{ pm.peer_median.revenue_growth_pct|pct }}</td><td></td></tr>
+      {% endif %}
+    </table></div>
+    {% if page.hist_note %}<p class="sub" style="color:var(--ink2)">{{ page.hist_note }}{% if page.prem_note %} {{ page.prem_note }}{% endif %}</p>{% endif %}
+    {% if not pm.peers %}<div class="sub na">Peer comparison unavailable for this run.</div>{% endif %}
+    {% if page.peer_rationale %}<div class="sub">Peer set: {{ page.peer_rationale|truncate(220, true, '…') }}</div>{% endif %}
+    {% for n in pm.notes[:3] %}<div class="sub na">{{ n|truncate(140, true, '…') }}</div>{% endfor %}
+    {% if page.peer_sources %}<div class="srcs">Sources: {% for s in page.peer_sources %}<a href="{{ s.url }}">{{ s.title|truncate(60, true, '…') }}</a>{% endfor %}</div>{% endif %}
+  </section>
+
+  <section id="news" class="card news">
+    <h2>Recent news &amp; events <span class="src">· since last earnings{% if page.last_earnings_date %} ({{ page.last_earnings_date }}){% endif %}</span></h2>
+    <span class="badge {{ page.guidance_tone }}">{{ page.guidance_label }}</span>
+    {% if page.guidance_note %}<div class="sub" style="margin:6px 0 8px;color:var(--ink2)">{{ page.guidance_note|truncate(180, true, '…') }}</div>{% endif %}
+    {% if page.news %}
+      <ul style="margin-top:6px">
+      {% for n in page.news[:5] %}<li><span class="cat {{ n.category_label|replace('&','') }}">{{ n.category_label }}</span><a href="{{ n.url }}">{{ n.headline|truncate(95, true, '…') }}</a><span class="d">{{ n.date }}</span><div class="sub" style="margin-top:1px;color:var(--ink2)">{{ n.summary|truncate(150, true, '…') }}</div></li>{% endfor %}
+      </ul>
+    {% else %}<p class="na" style="margin-top:8px">News digest unavailable for this run.</p>{% endif %}
+    {% if page.news_sources %}<div class="srcs">Sources: {% for s in page.news_sources %}<a href="{{ s.url }}">{{ s.title|truncate(60, true, '…') }}</a>{% endfor %}</div>{% endif %}
+  </section>
+
+</div>
+</div>
+
+<div id="footer" class="foot">AI-generated research companion for internal analyst use only — not investment advice. Verify all figures against primary sources before use in client-facing work. Generated {{ page.generated_at }} · run {{ page.run_id }}{% if page.qa %} · QA {{ 'passed' if page.qa.passed else 'flagged issues' }}{% endif %}</div>
+
+</div>
+</body>
+</html>

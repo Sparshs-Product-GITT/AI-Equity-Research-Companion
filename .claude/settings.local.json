@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(py -3 -c \"import json,sys;d=json.load\\(sys.stdin\\);g=d['facts']['us-gaap'];print\\(d['entityName']\\);print\\('tags:',len\\(g\\)\\);print\\([t for t in ['Revenues','RevenueFromContractWithCustomerExcludingAssessedTax','GrossProfit','OperatingIncomeLoss','NetIncomeLoss','EarningsPerShareDiluted','NetCashProvidedByUsedInOperatingActivities','PaymentsToAcquirePropertyPlantAndEquipment','ResearchAndDevelopmentExpense','SellingAndMarketingExpense','CashAndCashEquivalentsAtCarryingValue','LongTermDebt'] if t in g]\\);r=g['RevenueFromContractWithCustomerExcludingAssessedTax']['units']['USD'];print\\('sample:',[\\(x['fy'],x['fp'],x['form'],x['end'],x['val']\\) for x in r if x['form']=='10-K' and x['fp']=='FY'][-3:]\\)\")",
+      "Bash(python3 -c ' *)",
+      "Bash('C:\\\\Users\\\\Sparsh Upadhyay\\\\OD-McK\\\\Desktop\\\\Sparsh_Equity_Research_Agent\\\\.venv\\\\Scripts\\\\python.exe' -c ' *)"
+    ]
+  }
+}
